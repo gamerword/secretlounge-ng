@@ -236,10 +236,12 @@ stats.register_source(queue_stat)
 
 # Message sending (functions)
 
+s_api_forwarded = stats.countable_source("api_forwarded")
 def resend_message(chat_id, ev, reply_to=None):
 	if (ev.forward_from is not None or ev.forward_from_chat is not None
 		or ev.json.get("forward_sender_name") is not None):
 		# forward message instead of re-sending the contents
+		s_api_forwarded(1)
 		return bot.forward_message(chat_id, ev.chat.id, ev.message_id)
 
 	kwargs = {}
